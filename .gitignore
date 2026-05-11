@@ -1,0 +1,19 @@
+# Dependencies
+frontend/node_modules/
+backend/venv/
+
+# Data & models (too large for GitHub)
+data/raw/
+data/models/
+data/logs/
+
+# Environment
+backend/.env
+*.pyc
+__pycache__/
+
+# Build output
+frontend/dist/
+
+# IDE
+.vscode/settings.json
