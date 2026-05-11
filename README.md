@@ -1,4 +1,4 @@
-# Paycrest Liquidity Intelligence System
+# FRIDAY Intelligence System
 
 A full-stack data science solution that predicts transaction failures, monitors corridor health, and surfaces liquidity gaps across Paycrest's African payment network.
 
