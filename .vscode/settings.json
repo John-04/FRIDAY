@@ -1,0 +1,43 @@
+{
+  "folders": [
+    { "name": "Root", "path": "." },
+    { "name": "Frontend", "path": "frontend" },
+    { "name": "Backend", "path": "backend" }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[python]": { "editor.defaultFormatter": "ms-python.black-formatter" },
+    "python.defaultInterpreterPath": "./backend/venv/bin/python",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "tailwindCSS.experimental.classRegex": [["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]],
+    "editor.rulers": [100],
+    "files.exclude": { "**/__pycache__": true, "**/node_modules": true, "**/.venv": true }
+  },
+  "extensions": {
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "ms-python.python",
+      "ms-python.black-formatter",
+      "bradlc.vscode-tailwindcss",
+      "dbaeumer.vscode-eslint",
+      "ms-python.vscode-pylance",
+      "formulahendry.auto-rename-tag",
+      "christian-kohler.path-intellisense"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "FastAPI Backend",
+        "type": "python",
+        "request": "launch",
+        "module": "uvicorn",
+        "args": ["src.api.main:app", "--reload", "--port", "8000"],
+        "cwd": "${workspaceFolder}/backend",
+        "envFile": "${workspaceFolder}/backend/.env"
+      }
+    ]
+  }
+}

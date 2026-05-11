@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-import { ArrowRight, TrendingDown, TrendingUp, Minus } from 'lucide-react'
-import { LineChart, Line, ResponsiveContainer, Tooltip } from 'recharts'
+import { ArrowRight } from 'lucide-react'
 import { getDashboard } from '@/lib/api'
 import { fmtPct, fmtUSD, healthColor, riskColor } from '@/lib/utils'
 
@@ -37,8 +36,6 @@ export default function OverviewPage() {
 
   return (
     <div className="page-in pt-24 pb-20 max-w-7xl mx-auto px-6">
-
-      {/* Page header */}
       <div className="mb-12 pt-8">
         <div className="flex items-center gap-3 mb-3">
           <div className="live-dot" />
@@ -47,8 +44,8 @@ export default function OverviewPage() {
           </span>
         </div>
         <h1 className="font-display text-[48px] font-700 leading-none tracking-tight mb-3" style={{ color: 'var(--text-1)' }}>
-          Liquidity Intelligence<br />
-          <span style={{ color: 'var(--accent)' }}>Dashboard</span>
+          FRIDAY<br />
+          <span style={{ color: 'var(--accent)' }}>Intelligence</span>
         </h1>
         <p className="text-[15px] max-w-xl" style={{ color: 'var(--text-2)', lineHeight: 1.6 }}>
           ML-powered failure prediction and corridor health monitoring built on the Paycrest protocol.
@@ -56,7 +53,6 @@ export default function OverviewPage() {
         </p>
       </div>
 
-      {/* Key metrics row */}
       <div className="grid grid-cols-4 gap-px mb-12" style={{ background: 'var(--rule)' }}>
         {[
           { label: 'Transactions Analysed', val: meta?.total_transactions.toLocaleString() ?? '–', sub: 'Jun 2024 – Mar 2026' },
@@ -72,10 +68,7 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* Two column layout */}
       <div className="grid grid-cols-3 gap-6 mb-6">
-
-        {/* Corridor health table */}
         <div className="col-span-2 card" style={{ background: 'var(--ink-3)' }}>
           <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--rule)' }}>
             <span className="font-display font-600 text-[13px]" style={{ color: 'var(--text-1)' }}>Corridor Health</span>
@@ -116,45 +109,29 @@ export default function OverviewPage() {
                     </div>
                   </td>
                   <td>
-                    <span className="chip" style={{
-                      color: c.actual_fail_rate > 0.4 ? 'var(--down)' : c.actual_fail_rate > 0.3 ? 'var(--warn)' : 'var(--up)',
-                    }}>
+                    <span className="chip" style={{ color: c.actual_fail_rate > 0.4 ? 'var(--down)' : c.actual_fail_rate > 0.3 ? 'var(--warn)' : 'var(--up)' }}>
                       {fmtPct(c.actual_fail_rate)}
                     </span>
                   </td>
-                  <td>
-                    <span className="font-mono text-[12px]" style={{ color: 'var(--text-2)' }}>
-                      {fmtUSD(c.avg_liquidity_depth)}
-                    </span>
-                  </td>
-                  <td>
-                    <span className="font-mono text-[12px]" style={{ color: 'var(--text-2)' }}>
-                      {c.avg_active_providers.toFixed(1)}
-                    </span>
-                  </td>
+                  <td><span className="font-mono text-[12px]" style={{ color: 'var(--text-2)' }}>{fmtUSD(c.avg_liquidity_depth)}</span></td>
+                  <td><span className="font-mono text-[12px]" style={{ color: 'var(--text-2)' }}>{c.avg_active_providers.toFixed(1)}</span></td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        {/* Right column */}
         <div className="flex flex-col gap-4">
-          {/* Model summary */}
           <div className="card p-5" style={{ background: 'var(--ink-3)' }}>
             <div className="flex items-center justify-between mb-4">
               <span className="font-display font-600 text-[13px]" style={{ color: 'var(--text-1)' }}>Models</span>
-              <Link to="/models" className="font-mono text-[11px] no-underline" style={{ color: 'var(--accent)' }}>
-                Details →
-              </Link>
+              <Link to="/models" className="font-mono text-[11px] no-underline" style={{ color: 'var(--accent)' }}>Details →</Link>
             </div>
             {models.map((m, i) => (
               <div key={m.model_name} className="flex items-center justify-between py-2 border-b last:border-0" style={{ borderColor: 'var(--rule)' }}>
                 <div className="flex items-center gap-2">
                   {i === 0 && <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--accent)' }} />}
-                  <span className="font-mono text-[11px]" style={{ color: i === 0 ? 'var(--text-1)' : 'var(--text-3)' }}>
-                    {m.model_name}
-                  </span>
+                  <span className="font-mono text-[11px]" style={{ color: i === 0 ? 'var(--text-1)' : 'var(--text-3)' }}>{m.model_name}</span>
                 </div>
                 <span className="font-mono text-[11px]" style={{ color: i === 0 ? 'var(--accent)' : 'var(--text-3)' }}>
                   {(m.test_auc * 100).toFixed(2)}%
@@ -163,14 +140,9 @@ export default function OverviewPage() {
             ))}
           </div>
 
-          {/* Top SHAP factors */}
           <div className="card p-5 flex-1" style={{ background: 'var(--ink-3)' }}>
-            <div className="font-display font-600 text-[13px] mb-4" style={{ color: 'var(--text-1)' }}>
-              Top Risk Drivers
-            </div>
-            <div className="font-mono text-[10px] uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>
-              SHAP importance
-            </div>
+            <div className="font-display font-600 text-[13px] mb-4" style={{ color: 'var(--text-1)' }}>Top Risk Drivers</div>
+            <div className="font-mono text-[10px] uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>SHAP importance</div>
             {Object.entries(shap).slice(0, 6).map(([feat, val], i) => {
               const max = Object.values(shap)[0] as number
               return (
@@ -194,7 +166,6 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* Providers preview */}
       <div className="card" style={{ background: 'var(--ink-3)' }}>
         <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--rule)' }}>
           <span className="font-display font-600 text-[13px]" style={{ color: 'var(--text-1)' }}>Provider Performance</span>
@@ -207,9 +178,7 @@ export default function OverviewPage() {
             <div key={p.provider} style={{ background: 'var(--ink-3)', padding: '16px' }}>
               <div className="font-mono text-[10px] mb-2 truncate" style={{ color: 'var(--text-3)' }}>{p.provider}</div>
               <SparkBar rate={p.fail_rate} />
-              <div className="font-mono text-[10px] mt-1" style={{ color: 'var(--text-3)' }}>
-                {p.avg_settlement_time.toFixed(0)}m settle
-              </div>
+              <div className="font-mono text-[10px] mt-1" style={{ color: 'var(--text-3)' }}>{p.avg_settlement_time.toFixed(0)}m settle</div>
             </div>
           ))}
         </div>

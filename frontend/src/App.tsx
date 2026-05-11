@@ -16,13 +16,22 @@ function Footer() {
   return (
     <footer style={{ borderTop: '1px solid var(--rule)', padding: '24px 0', marginTop: 40 }}>
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <span className="font-mono text-[11px]" style={{ color: 'var(--text-3)' }}>
-          Paycrest Intelligence · ML-powered liquidity analytics
-        </span>
+        <div className="flex items-center gap-3">
+          <span style={{
+            fontFamily: '"Syne", sans-serif',
+            fontWeight: 700,
+            fontSize: 13,
+            color: 'var(--accent)',
+            letterSpacing: '-0.02em',
+          }}>FRIDAY</span>
+          <span className="font-mono text-[11px]" style={{ color: 'var(--text-3)' }}>
+            · ML-powered liquidity intelligence for African corridors
+          </span>
+        </div>
         <div className="flex items-center gap-2">
           <div className="live-dot" />
           <span className="font-mono text-[11px]" style={{ color: 'var(--text-3)' }}>
-            15,000 transactions · 7 corridors · Live API
+            15,000 transactions · 7 corridors · Paycrest API
           </span>
         </div>
       </div>
