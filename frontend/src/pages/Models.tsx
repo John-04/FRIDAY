@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { getDashboard } from '@/lib/api'
 
 const T1='var(--text-1)',T2='var(--text-2)',T3='var(--text-3)',RULE='var(--rule)',ACCENT='var(--accent)'
@@ -12,12 +12,14 @@ export default function ModelsPage() {
   const best = models[0]
 
   const rocData = best?.roc_curve
-    ? best.roc_curve.fpr.map((f: number, i: number) => ({ fpr: +f.toFixed(3), tpr: +best.roc_curve.tpr[i].toFixed(3) }))
+    ? best.roc_curve.fpr.map((f: number, i: number) => ({
+        fpr: +f.toFixed(3),
+        tpr: +best.roc_curve.tpr[i].toFixed(3)
+      }))
     : []
 
   const shapEntries = Object.entries(shap).slice(0, 14)
-  const maxShap = shapEntries[0]?.[1] as number ?? 1
-
+  const maxShap = (shapEntries[0]?.[1] as number) ?? 1
   const MODEL_COLORS = ['var(--accent)', 'var(--text-2)', 'var(--text-3)']
 
   return (
@@ -39,9 +41,7 @@ export default function ModelsPage() {
           <div key={m.model_name} style={{ background: 'var(--ink-3)', padding: '24px' }}>
             <div className="flex items-center justify-between mb-5">
               <div className="font-display font-600 text-[15px]" style={{ color: T1 }}>{m.model_name}</div>
-              {i === 0 && (
-                <span className="chip accent">★ Best</span>
-              )}
+              {i === 0 && <span className="chip accent">★ Best</span>}
             </div>
             <div className="space-y-3">
               {[
@@ -56,7 +56,6 @@ export default function ModelsPage() {
                 </div>
               ))}
             </div>
-            {/* AUC progress */}
             <div className="mt-4 h-px" style={{ background: 'var(--ink-4)' }}>
               <motion.div
                 style={{ height: '100%', background: MODEL_COLORS[i] }}
@@ -69,21 +68,18 @@ export default function ModelsPage() {
         ))}
       </div>
 
-      {/* Charts row */}
+      {/* Charts */}
       <div className="grid grid-cols-2 gap-6 mb-8">
-        {/* ROC Curve */}
         <div className="card p-6" style={{ background: 'var(--ink-3)' }}>
-          <div className="font-mono text-[10px] uppercase tracking-widest mb-1" style={{ color: T3 }}>
-            ROC Curve
-          </div>
+          <div className="font-mono text-[10px] uppercase tracking-widest mb-1" style={{ color: T3 }}>ROC Curve</div>
           <div className="font-display font-600 text-[14px] mb-5" style={{ color: T1 }}>
             {best?.model_name} · AUC = {best ? (best.test_auc * 100).toFixed(4) : '–'}%
           </div>
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={rocData}>
               <CartesianGrid stroke={RULE} />
-              <XAxis dataKey="fpr" tick={{ fontSize: 9, fill: T3, fontFamily: 'DM Mono' }} tickCount={6} domain={[0,1]} label={{ value: 'FPR', position: 'insideBottom', offset: -2, fontSize: 9, fill: T3 }} />
-              <YAxis tick={{ fontSize: 9, fill: T3, fontFamily: 'DM Mono' }} tickCount={6} domain={[0,1]} label={{ value: 'TPR', angle: -90, position: 'insideLeft', fontSize: 9, fill: T3 }} />
+              <XAxis dataKey="fpr" tick={{ fontSize: 9, fill: T3, fontFamily: 'DM Mono' }} tickCount={6} domain={[0,1]} />
+              <YAxis tick={{ fontSize: 9, fill: T3, fontFamily: 'DM Mono' }} tickCount={6} domain={[0,1]} />
               <Tooltip contentStyle={{ background: 'var(--ink-4)', border: `1px solid ${RULE}`, borderRadius: 2, fontFamily: 'DM Mono', fontSize: 10 }} />
               <Line type="linear" dataKey="tpr" stroke={ACCENT} strokeWidth={1.5} dot={false} name="Model" />
               <Line data={[{fpr:0,tpr:0},{fpr:1,tpr:1}]} type="linear" dataKey="tpr" stroke={T3} strokeWidth={1} strokeDasharray="3 3" dot={false} name="Baseline" />
@@ -91,14 +87,9 @@ export default function ModelsPage() {
           </ResponsiveContainer>
         </div>
 
-        {/* SHAP */}
         <div className="card p-6" style={{ background: 'var(--ink-3)' }}>
-          <div className="font-mono text-[10px] uppercase tracking-widest mb-1" style={{ color: T3 }}>
-            SHAP Feature Importance
-          </div>
-          <div className="font-display font-600 text-[14px] mb-5" style={{ color: T1 }}>
-            What Drives Transaction Failures
-          </div>
+          <div className="font-mono text-[10px] uppercase tracking-widest mb-1" style={{ color: T3 }}>SHAP Feature Importance</div>
+          <div className="font-display font-600 text-[14px] mb-5" style={{ color: T1 }}>What Drives Transaction Failures</div>
           <div className="space-y-3">
             {shapEntries.map(([feat, val], i) => (
               <div key={feat}>
@@ -120,7 +111,7 @@ export default function ModelsPage() {
         </div>
       </div>
 
-      {/* Training details */}
+      {/* Pipeline details */}
       <div className="card p-6" style={{ background: 'var(--ink-3)' }}>
         <div className="font-display font-600 text-[14px] mb-5" style={{ color: T1 }}>Pipeline Details</div>
         <div className="grid grid-cols-4 gap-px" style={{ background: RULE }}>
@@ -131,8 +122,8 @@ export default function ModelsPage() {
             { label: 'Features', val: '20 engineered' },
             { label: 'Explainability', val: 'SHAP TreeExplainer' },
             { label: 'SHAP samples', val: '500 test rows' },
-            { label: 'Best model', val: data?.meta.best_model ?? '–' },
-            { label: 'Trained at', val: data?.trained_at ? new Date(data.trained_at).toLocaleDateString() : '–' },
+            { label: 'Best model', val: data?.meta.best_model ?? 'Random Forest' },
+            { label: 'Total transactions', val: data?.meta.total_transactions.toLocaleString() ?? '15,000' },
           ].map(d => (
             <div key={d.label} style={{ background: 'var(--ink-4)', padding: '16px' }}>
               <div className="stat-label mb-2">{d.label}</div>
