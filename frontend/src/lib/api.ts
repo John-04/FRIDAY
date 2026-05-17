@@ -1,8 +1,6 @@
 import axios from 'axios'
 
-// In production (Vercel), use the Render backend URL via env var
-// In development, use the Vite proxy (/api → localhost:8000)
-const baseURL = import.meta.env.VITE_API_URL
+const baseURL = (import.meta.env.VITE_API_URL ?? '') !== ''
   ? `${import.meta.env.VITE_API_URL}/api`
   : '/api'
 
@@ -12,7 +10,6 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
-// Log errors in dev
 api.interceptors.response.use(
   res => res,
   err => {
