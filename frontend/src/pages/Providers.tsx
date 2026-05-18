@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { getDashboard, getTrends } from '@/lib/api'
 import { fmtPct, fmtUSD, riskColor } from '@/lib/utils'
